@@ -3,50 +3,48 @@ from hs import *
 
 def inner_product(v1, v2):
     """Calculate the inner (dot) product of two vectors."""
-    return np.dot(v1, v2)
+    return hs.inner_prod(v1, v2)
 
 def scalar_multiply(scalar, vector):
     """Multiply a vector by a scalar."""
-    return scalar * vector
+    return hs.scal_mult(scalar, vector)
 
+def add(u, v):
+    return hs.add(u, v)
 
-class Vector: 
-    def __init__(self, )
+def proj(v, u): 
+    nom = inner_product(v, u)
+    denom = inner_product(u, u)
+    return scalar_multiply(nom/denom, u)
+
+def substract(v, u):
+    minus_u = scalar_multiply(-1, u)
+    return add(v, minus_u)
+
+def gram_schmidt_step(v, projection):
+
+    minus_proj = scalar_multiply(-1, projection)
 
 def gram_schmidt(vectors):
     """
     Perform Gram-Schmidt orthogonalization on a set of vectors.
     
     Parameters:
-        vectors (list or np.ndarray): List or array of vectors (each vector is an array).
+        list of vectors: List or array of Vectors of the hilbert space class.
         
     Returns:
-        np.ndarray: Orthogonalized vectors as rows in a 2D numpy array.
+        list of vectors: Orthogonalized vectors as rows in a list.
     """
-    vectors = np.array(vectors, dtype=float)
-    n = vectors.shape[0]
+    
+    n = len(vectors)
 
-    orthogonal = np.zeros_like(vectors)
+    orthogonal = [vectors[0]]*n
 
-    for i in range(n):
-        vec = vectors[i]
-        for j in range(i):
-            proj_scalar = inner_product(orthogonal[j], vec) / inner_product(orthogonal[j], orthogonal[j])
-            proj = scalar_multiply(proj_scalar, orthogonal[j])
-            vec = vec - proj
-        orthogonal[i] = vec
-
+    for i in range(1, n):
+        proj = proj(vectors[i], orthogonal[i-1])
+        orthogonal[i] = substract(vectors[i], proj)
+        
     return orthogonal
 
-# Example usage:
-vectors = [
-    [1, 1, 0],
-    [1, 0, 1],
-    [0, 1, 1]
-]
-
-orthogonal_vectors = gram_schmidt(vectors)
-print("Orthogonal vectors:")
-print(orthogonal_vectors)
 
 

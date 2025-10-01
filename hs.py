@@ -12,7 +12,6 @@ class Vector:
         self.l = (grid[-1] - grid[0])/2.
         self.normalize()
 
-
 def C(grid, g):   
     return Vector(grid, normalize(grid, g.pz))
 
@@ -38,6 +37,6 @@ def norm(f):
 
 def distance(f, g):
     assert f.grid == g.grid
-    return np.sqrt(inner_prod(f.pz, f.pz) - 2 * inner_prod(f.pz, g.pz) + inner_prod(g.pz, g.pz))
+    return np.sqrt(inner_prod(f.pz, f.pz) - 2. * inner_prod(f.pz, g.pz) + inner_prod(g.pz, g.pz))
 
 
