@@ -1,5 +1,6 @@
 import numpy as np
-from hs import *
+import hs
+from hs import Vector
 
 def inner_product(v1, v2):
     """Calculate the inner (dot) product of two vectors."""
@@ -21,10 +22,6 @@ def substract(v, u):
     minus_u = scalar_multiply(-1, u)
     return add(v, minus_u)
 
-def gram_schmidt_step(v, projection):
-
-    minus_proj = scalar_multiply(-1, projection)
-
 def gram_schmidt(vectors):
     """
     Perform Gram-Schmidt orthogonalization on a set of vectors.
@@ -41,10 +38,30 @@ def gram_schmidt(vectors):
     orthogonal = [vectors[0]]*n
 
     for i in range(1, n):
-        proj = proj(vectors[i], orthogonal[i-1])
-        orthogonal[i] = substract(vectors[i], proj)
-        
+        projection = proj(vectors[i], orthogonal[i-1])
+        orthogonal[i] = substract(vectors[i], projection)
+
     return orthogonal
 
 
 
+if __name__ == "__main__":
+    np.random.seed(0)
+    
+    grid = np.linspace(-5, 5, 1000)
+    def get_normal_distribution(mean, std=1):
+        return (1/(std * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((grid - mean)/std)**2)
+
+    normal_distribution_vectors = [Vector(grid, get_normal_distribution(mean)) 
+                                   for mean in np.random.normal(0, 0.1, 100)]
+
+    result = gram_schmidt(normal_distribution_vectors)
+    
+    print(result)
+    from matplotlib import pyplot as plt
+    for el in result:
+        plt.plot(el.grid, np.log(el.pz))
+    plt.show()
+
+
+    print(inner_product(result[0], result[1]))
